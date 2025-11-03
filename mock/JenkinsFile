@@ -1,0 +1,20 @@
+pipeline{
+    stages{
+        stage("clone git"){
+            steps{[
+                $class: 'GitSCM',
+                branches: [[name: "*/main"]],
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [],
+                submoduleCfg: [],
+                userRemoteConfigs: [[
+                    url: 'https://github.com/sofc-T/Jenkins_Ops_try.git',
+                    credentialsId: 'github-cred',
+                ]]
+            ]}
+        }
+        stage{
+            
+        }
+    }
+}
