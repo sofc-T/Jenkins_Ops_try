@@ -27,7 +27,7 @@ pipeline {
                     writeFile file: envFile, text: newValue
 
                     // Configure Git
-                    sh 'git config user.email "sofstzz.com"'
+                    sh 'git config user.email "sofstzz$@gmail.com"'
                     sh 'git config user.name "sofc-T"'
 
                     // Add, commit, and push
