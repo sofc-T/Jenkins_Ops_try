@@ -1,20 +1,41 @@
-pipeline{
-    stages{
-        stage("clone git"){
-            steps{[
-                $class: 'GitSCM',
-                branches: [[name: "*/main"]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [],
-                submoduleCfg: [],
-                userRemoteConfigs: [[
-                    url: 'https://github.com/sofc-T/Jenkins_Ops_try.git',
-                    credentialsId: 'github-cred',
-                ]]
-            ]}
+pipeline {
+    agent any
+
+    stages {
+        stage("Clone Git Repo") {
+            steps {
+                checkout([$class: 'GitSCM',
+                    branches: [[name: "*/main"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/sofc-T/Jenkins_Ops_try.git',
+                        credentialsId: 'github-cred'
+                    ]]
+                ])
+            }
         }
-        stage{
-            
+
+        stage("Update .env and Push") {
+            steps {
+                script {
+                    // Change the value of WHATSUP_VALUE
+                    def envFile = ".env"
+                    def newValue = 'WHATSUP_VALUE="Hello from Jenkins!"'
+
+                    writeFile file: envFile, text: newValue
+
+                    // Configure Git
+                    sh 'git config user.email "sofstzz.com"'
+                    sh 'git config user.name "sofc-T"'
+
+                    // Add, commit, and push
+                    sh 'git add .env'
+                    sh 'git commit -m "Update WHATSUP_VALUE via Jenkins pipeline"'
+                    sh 'git push origin main'
+                }
+            }
         }
     }
 }
